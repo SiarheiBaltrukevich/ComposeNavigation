@@ -79,7 +79,7 @@ fun BottomNavTabs(
     onUserClick: () -> Unit = {},
 ) {
     Row(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.height(40.dp),
         horizontalArrangement = Arrangement.Center,
     ) {
         TextButton(
