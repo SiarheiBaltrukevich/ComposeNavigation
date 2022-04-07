@@ -1,5 +1,6 @@
 package com.boltic28.composenavigation.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,10 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.boltic28.composenavigation.composables.Greeting
 import com.boltic28.composenavigation.composables.TopNavTabs
-import com.boltic28.composenavigation.composables.activities.SettingsPage
+import com.boltic28.composenavigation.composables.activities.SettingsFeed
+import com.boltic28.composenavigation.data.Repository
 import com.boltic28.composenavigation.ui.theme.ComposeNavigationTheme
 import com.boltic28.composenavigation.viewmodels.SettingsVM
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingsActivity : ComponentActivity() {
 
     private val settingsVM: SettingsVM by viewModels()
@@ -27,12 +31,23 @@ class SettingsActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.background) {
                     Column {
                         Greeting("Settings Activity")
-                        TopNavTabs()
-                        SettingsPage(model = settingsVM)
+                        TopNavTabs(
+                            onGuestClick = { startGuestActivity() },
+                            onHomeClick = { startHomeActivity() },
+                        )
+                        SettingsFeed(model = settingsVM)
                     }
                 }
             }
         }
+    }
+
+    private fun startGuestActivity() {
+        startActivity(Intent(this, GuestActivity::class.java))
+    }
+
+    private fun startHomeActivity() {
+        startActivity(Intent(this, HomeActivity::class.java))
     }
 }
 
@@ -43,7 +58,7 @@ fun NotificationPreview() {
         Column {
             Greeting("Settings Activity")
             TopNavTabs()
-            SettingsPage(model = SettingsVM("settings content"))
+            SettingsFeed(model = SettingsVM(Repository()))
         }
     }
 }

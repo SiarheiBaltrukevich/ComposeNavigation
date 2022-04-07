@@ -1,5 +1,6 @@
 package com.boltic28.composenavigation.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,20 +14,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.boltic28.composenavigation.composables.*
+import com.boltic28.composenavigation.composables.activities.HomeFeed
 import com.boltic28.composenavigation.composables.fragments.WelcomePage
+import com.boltic28.composenavigation.data.Repository
 import com.boltic28.composenavigation.ui.theme.ComposeNavigationTheme
 import com.boltic28.composenavigation.viewmodels.HomeVM
-import com.boltic28.composenavigation.viewmodels.fragmentmodels.OrdersVM
-import com.boltic28.composenavigation.viewmodels.fragmentmodels.UserVM
 import com.boltic28.composenavigation.viewmodels.fragmentmodels.WelcomeVM
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
 
     private val homeVM: HomeVM by viewModels()
-    private val ordersVM: OrdersVM by viewModels()
-    private val userVM: UserVM by viewModels()
-    private val welcomeVM: WelcomeVM by viewModels()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,18 +38,34 @@ class HomeActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.background) {
                     Column {
                         Greeting(name = "HomeActivity")
-                        TopNavTabs()
-                        HomeContainerHost(navController = navController, Modifier.fillMaxHeight().weight(0.9f))
-                        BottomNavTabs(
-                            onHomeClick = {navController.navigate(HOME_FRAGMENT)},
-                            onOrdersClick = {navController.navigate(PAST_ORDERS_FRAGMENT)},
-                            onUserClick = {navController.navigate(USER_FRAGMENT)}
+                        TopNavTabs(
+                            onGuestClick = { startGuestActivity() },
+                            onSettingsClick = { startSettingActivity() },
+                        )
+                        HomeFeed(model = homeVM)
+                        HomeNavigationHost(navController = navController,
+                            Modifier
+                                .fillMaxHeight()
+                                .weight(0.9f))
+                        BottomHomeNavTabs(
+                            onWelcomeClick = { navController.navigate(WELCOME_FRAGMENT) },
+                            onOrdersClick = { navController.navigate(PAST_ORDERS_FRAGMENT) },
+                            onUserClick = { navController.navigate(USER_FRAGMENT) },
                         )
                     }
                 }
             }
         }
     }
+
+    private fun startSettingActivity() {
+        startActivity(Intent(this, SettingsActivity::class.java))
+    }
+
+    private fun startGuestActivity() {
+        startActivity(Intent(this, GuestActivity::class.java))
+    }
+
 }
 
 @Preview(showSystemUi = true)
@@ -60,8 +75,9 @@ fun DefaultPreview() {
         Column {
             Greeting("Home Activity")
             TopNavTabs()
-            WelcomePage(model = WelcomeVM("welcome"))
-            BottomNavTabs()
+            HomeFeed(model = HomeVM(Repository()))
+            WelcomePage(model = WelcomeVM(Repository()))
+            BottomHomeNavTabs()
         }
     }
 }

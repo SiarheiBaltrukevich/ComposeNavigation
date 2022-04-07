@@ -1,7 +1,16 @@
 package com.boltic28.composenavigation.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.boltic28.composenavigation.data.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SettingsVM(
+@HiltViewModel
+class SettingsVM @Inject constructor(
+    private val repository: Repository,
+) : ViewModel() {
+
     val text: String = "Settings data"
-): ViewModel()
+    val count: String
+        get() =  repository.counter.toString()
+}
