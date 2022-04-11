@@ -24,6 +24,21 @@ fun Greeting(name: String) {
 }
 
 @Composable
+fun OpenOrdersButton(
+    onClick: () -> Unit
+) {
+    TextButton(onClick = { onClick() }) {
+        Text(
+            text = "Open orders Page",
+            modifier = Modifier
+                .weight(0.3f)
+                .border(1.dp, Color.LightGray),
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
 fun TopNavTabs(
     onGuestClick: () -> Unit = {},
     onHomeClick: () -> Unit = {},

@@ -21,25 +21,30 @@ import com.boltic28.composenavigation.composables.fragments.SignInPage
 import com.boltic28.composenavigation.composables.navigationgraphs.GuestNavigationHost
 import com.boltic28.composenavigation.composables.navigationgraphs.LOCATION_FRAGMENT
 import com.boltic28.composenavigation.composables.navigationgraphs.SIGN_IN_FRAGMENT
-import com.boltic28.composenavigation.data.Repository
+import com.boltic28.composenavigation.data.*
+import com.boltic28.composenavigation.data.navcache.CacheKey
+import com.boltic28.composenavigation.data.navcache.NavigationCacheManager
 import com.boltic28.composenavigation.ui.theme.ComposeNavigationTheme
 import com.boltic28.composenavigation.viewmodels.GuestVM
 import com.boltic28.composenavigation.viewmodels.fragmentmodels.SingInVM
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class GuestActivity: ComponentActivity() {
+
+    @Inject lateinit var navControllerWrapper: NavControllerWrapper
 
     private val guestModel: GuestVM by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             ComposeNavigationTheme {
 
-                val navController = rememberNavController()
+                navControllerWrapper.initWith(rememberNavController())
 
-                // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     Column {
                         Greeting("Guest Activity")
@@ -48,17 +53,35 @@ class GuestActivity: ComponentActivity() {
                             onSettingsClick = { startSettingActivity() },
                         )
                         GuestFeed(model = guestModel)
-                        GuestNavigationHost(navController = navController, Modifier
+                        GuestNavigationHost(navController = navControllerWrapper.controller, Modifier
                             .fillMaxHeight()
                             .weight(0.9f))
                         BottomGuestNavTabs(
-                            onSignInClick = {navController.navigate(SIGN_IN_FRAGMENT)},
-                            onLocationClick = {navController.navigate(LOCATION_FRAGMENT)},
+                            onSignInClick = { moveToSignInPage() },
+                            onLocationClick = { moveToLocationPage() },
                         )
                     }
                 }
             }
         }
+
+        // load default destination
+        moveToSignInPage()
+    }
+
+    private fun moveToSignInPage() {
+
+        navControllerWrapper
+            .putExtra(CacheKey.USER, guestModel.user)
+            .putExtra(CacheKey.ID, 3)
+            .navigateTo(SIGN_IN_FRAGMENT)
+        println("->> moveToSignInPage")
+    }
+
+    private fun moveToLocationPage() {
+        navControllerWrapper
+            .navigateTo(LOCATION_FRAGMENT)
+        println("->> moveToLocationPage")
     }
 
     private fun startSettingActivity() {
@@ -77,8 +100,8 @@ fun GuestPreview() {
         Column {
             Greeting("Guest Activity")
             TopNavTabs()
-            GuestFeed(model = GuestVM(Repository()))
-            SignInPage(model = SingInVM(Repository()))
+            GuestFeed(model = GuestVM(UserManager(Repository())))
+            SignInPage(model = SingInVM(Repository(), NavigationCacheManager()))
             BottomGuestNavTabs()
         }
     }
