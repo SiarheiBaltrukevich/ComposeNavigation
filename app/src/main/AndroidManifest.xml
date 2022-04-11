@@ -3,6 +3,7 @@
     package="com.boltic28.composenavigation">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -10,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ComposeNavigation">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.HomeActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ComposeNavigation.NoActionBar">
@@ -20,6 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.GuestActivity"/>
+        <activity android:name=".activities.SettingsActivity"/>
     </application>
 
 </manifest>

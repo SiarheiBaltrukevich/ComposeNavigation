@@ -24,25 +24,40 @@ fun Greeting(name: String) {
 }
 
 @Composable
+fun OpenOrdersButton(
+    onClick: () -> Unit
+) {
+    TextButton(onClick = { onClick() }) {
+        Text(
+            text = "Open orders Page",
+            modifier = Modifier
+                .weight(0.3f)
+                .border(1.dp, Color.LightGray),
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
 fun TopNavTabs(
-    onLeftClick: () -> Unit = {},
-    onBackClick: () -> Unit = {},
-    onRightClick: () -> Unit = {},
+    onGuestClick: () -> Unit = {},
+    onHomeClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier.height(40.dp),
     ) {
         TextButton(
-            onClick = onLeftClick,
+            onClick = onGuestClick,
             modifier = Modifier
                 .fillMaxSize()
                 .weight(0.3f)
                 .border(1.dp, Color.LightGray),
         ) {
-            Text(text = "Welcome", textAlign = TextAlign.Center)
+            Text(text = "Guest", textAlign = TextAlign.Center)
         }
         TextButton(
-            onClick = onBackClick,
+            onClick = onHomeClick,
             modifier = Modifier
                 .fillMaxSize()
                 .weight(0.3f)
@@ -51,7 +66,7 @@ fun TopNavTabs(
             Text(text = "Home", textAlign = TextAlign.Center)
         }
         TextButton(
-            onClick = onRightClick,
+            onClick = onSettingsClick,
             modifier = Modifier
                 .fillMaxSize()
                 .weight(0.3f)
@@ -73,23 +88,23 @@ fun TopNavTabsPreview() {
 }
 
 @Composable
-fun BottomNavTabs(
-    onHomeClick: () -> Unit = {},
+fun BottomHomeNavTabs(
+    onWelcomeClick: () -> Unit = {},
     onOrdersClick: () -> Unit = {},
     onUserClick: () -> Unit = {},
 ) {
     Row(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.height(40.dp),
         horizontalArrangement = Arrangement.Center,
     ) {
         TextButton(
-            onClick = onHomeClick,
+            onClick = onWelcomeClick,
             modifier = Modifier
                 .fillMaxSize()
                 .weight(0.3f)
                 .border(1.dp, Color.LightGray),
         ) {
-            Text(text = "Home", textAlign = TextAlign.Center)
+            Text(text = "Welcome", textAlign = TextAlign.Center)
         }
         TextButton(
             onClick = onOrdersClick,
@@ -114,10 +129,50 @@ fun BottomNavTabs(
 
 @Preview(showBackground = true)
 @Composable
-fun BottomNavTabsPreview() {
+fun BottomHomeNavTabsPreview() {
     ComposeNavigationTheme {
         Column {
-            BottomNavTabs()
+            BottomHomeNavTabs()
+        }
+    }
+}
+
+@Composable
+fun BottomGuestNavTabs(
+    onSignInClick: () -> Unit = {},
+    onLocationClick: () -> Unit = {},
+) {
+    Row(
+        modifier = Modifier.height(40.dp),
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        TextButton(
+            onClick = onSignInClick,
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(0.3f)
+                .border(1.dp, Color.LightGray),
+        ) {
+            Text(text = "SignIn", textAlign = TextAlign.Center)
+        }
+        TextButton(
+            onClick = onLocationClick,
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(0.3f)
+                .border(1.dp, Color.LightGray),
+        ) {
+            Text(text = "Location", textAlign = TextAlign.Center)
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BottomGuestNavTabsPreview() {
+    ComposeNavigationTheme {
+        Column {
+            BottomGuestNavTabs()
         }
     }
 }

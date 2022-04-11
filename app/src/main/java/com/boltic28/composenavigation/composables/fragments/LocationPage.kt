@@ -4,18 +4,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.boltic28.composenavigation.viewmodels.fragmentmodels.OrdersVM
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.boltic28.composenavigation.viewmodels.fragmentmodels.LocationVM
 
 @Composable
-fun OrdersPage(model: OrdersVM) {
+fun LocationPage(
+    model: LocationVM = hiltViewModel()
+) {
+    val text = remember { model.text }.collectAsState()
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "this is a ${model.text} fragment!"
+            text = text.value
         )
     }
 }
